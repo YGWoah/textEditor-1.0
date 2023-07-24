@@ -2,6 +2,8 @@
 
 This project is a text editor built using React and TypeScript.
 
+**Note: This project is still in development and is not yet ready for production use. It may contain bugs, incomplete features.**
+
 ## Getting Started
 
 To get started with the project, follow these steps:
