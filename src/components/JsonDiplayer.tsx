@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 type TextStyle = {
   italic: boolean;
   bold: boolean;
@@ -20,8 +22,16 @@ const JsonDiplayer = ({
 }: {
   textConvertedToJSON: TextConvertedToJSON;
 }) => {
+  const [inputFocusedOn, setinputFocusedOn] = useState(false);
   return (
-    <div className="text-black text-lg text-center">
+    <div
+      className="text-black text-lg text-center"
+      onClick={() => {
+        console.log('i am being stept on daddy!!!');
+
+        setinputFocusedOn((prevState) => !prevState);
+      }}
+    >
       {textConvertedToJSON?.ops[0] ? (
         textConvertedToJSON.ops.map((element) => {
           return (
@@ -37,12 +47,16 @@ const JsonDiplayer = ({
               >
                 {element.insert}
               </span>
-              <span className="animate-toggle">|</span>
             </>
           );
         })
       ) : (
         <p className=" text-gray-400 ">Write tour Text here...</p>
+      )}
+      {inputFocusedOn ? (
+        <span className="animate-toggle">|</span>
+      ) : (
+        ''
       )}
     </div>
   );

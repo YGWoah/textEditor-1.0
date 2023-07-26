@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import Editor from './pages/Editor';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -12,10 +11,6 @@ import EditorJsonApproach from './pages/EditorJsonApproach';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Editor />,
-  },
-  {
-    path: '/editorjson',
     element: <EditorJsonApproach />,
   },
   {

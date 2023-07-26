@@ -27,33 +27,32 @@ const CustomTextFeild = ({
 }) => {
   const [textConvertedToJSON, setTextConvertedToJSON] =
     useState<TextConvertedToJSON>(null);
+  const [title, setTitle] = useState<string>('');
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const key = event.key;
-    const isNormalLetter = /^[a-zA-Z]$/.test(key);
+    const keyIsNormalLetter = /^[a-zA-Z]$/.test(key);
+
+    const changeTextStyle = (key: keyof TextStyle) => {
+      setTextStyle((prevState: TextStyle) => ({
+        ...prevState,
+        [key]: !prevState[key],
+      }));
+    };
 
     const handleKeyPress = () => {
       if (event.shiftKey) {
         // Handle Shift + key
-      } else if (event.ctrlKey && event.key === 'b') {
+      } else if (event.ctrlKey && key === 'b') {
         event.preventDefault(); // Prevent the default browser behavior
-        setTextStyle((prevState: TextStyle) => ({
-          ...prevState,
-          bold: !prevState.bold,
-        }));
-      } else if (event.ctrlKey && event.key === 'i') {
-        event.preventDefault(); // Prevent the default browser behavior
-        setTextStyle((prevState: TextStyle) => ({
-          ...prevState,
-          italic: !prevState.italic,
-        }));
-      } else if (event.ctrlKey && event.key === 'u') {
-        event.preventDefault(); // Prevent the default browser behavior
-        setTextStyle((prevState: TextStyle) => ({
-          ...prevState,
-          underline: !prevState.underline,
-        }));
-      } else if (event.ctrlKey && event.key === 'Backspace') {
+        changeTextStyle('bold');
+      } else if (event.ctrlKey && key === 'i') {
+        event.preventDefault();
+        changeTextStyle('italic');
+      } else if (event.ctrlKey && key === 'u') {
+        event.preventDefault();
+        changeTextStyle('underline');
+      } else if (event.ctrlKey && key === 'Backspace') {
         event.preventDefault(); // Prevent the default browser behavior
         if (!textConvertedToJSON) return;
         let updatedOps = textConvertedToJSON?.ops;
@@ -62,7 +61,7 @@ const CustomTextFeild = ({
         setTextConvertedToJSON({
           ops: updatedOps,
         });
-      } else if (event.key === 'Backspace') {
+      } else if (key === 'Backspace') {
         // Handle Backspace
         let updatedOps = textConvertedToJSON?.ops;
         if (!updatedOps || updatedOps.length === 0) {
@@ -81,7 +80,7 @@ const CustomTextFeild = ({
             ops: updatedOps,
           });
         }
-      } else if (event.key === ' ') {
+      } else if (key === ' ') {
         event.preventDefault();
 
         setTextConvertedToJSON((prevTextConvertedToJSON) => {
@@ -94,7 +93,7 @@ const CustomTextFeild = ({
           }
           return null;
         });
-      } else if (event.key === 'Enter') {
+      } else if (key === 'Enter') {
         // Handle Enter
 
         setTextConvertedToJSON((prevTextConvertedToJSON) => {
@@ -107,7 +106,7 @@ const CustomTextFeild = ({
           }
           return null;
         });
-      } else if (isNormalLetter) {
+      } else if (keyIsNormalLetter) {
         if (
           textConvertedToJSON &&
           textConvertedToJSON?.ops?.length > 0
@@ -150,11 +149,36 @@ const CustomTextFeild = ({
     handleKeyPress();
   };
 
-  console.log(textConvertedToJSON);
+  const handleTitleKeyDown = (
+    event: KeyboardEvent<HTMLDivElement>
+  ) => {
+    const key = event.key;
+    const keyIsNormalLetter = /^[a-zA-Z]$/.test(key);
+    if (keyIsNormalLetter) {
+      setTitle((prevState) => {
+        return prevState + event.key;
+      });
+    } else if (event.ctrlKey && key === 'Backspace') {
+      setTitle('');
+      console.log();
+    } else if (key === 'Backspace') {
+      setTitle((prevState) => {
+        return prevState.slice(0, -1);
+      });
+    }
+  };
 
   return (
     <div>
-      <div className="font-bold text-3xl">New post title here...</div>
+      <div
+        className="font-bold text-3xl"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          handleTitleKeyDown(e);
+        }}
+      >
+        {title.length > 0 ? title : 'Post title here...'}
+      </div>
       <div
         tabIndex={0}
         onKeyDown={(e) => {
