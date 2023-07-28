@@ -19,44 +19,38 @@ type TextConvertedToJSON = {
 
 const JsonDiplayer = ({
   textConvertedToJSON,
+  isClickedInside,
 }: {
   textConvertedToJSON: TextConvertedToJSON;
+  isClickedInside: boolean;
 }) => {
-  const [inputFocusedOn, setinputFocusedOn] = useState(false);
   return (
-    <div
-      className="text-black text-lg text-center"
-      onClick={() => {
-        console.log('i am being stept on daddy!!!');
-
-        setinputFocusedOn((prevState) => !prevState);
-      }}
-    >
-      {textConvertedToJSON?.ops[0] ? (
-        textConvertedToJSON.ops.map((element) => {
-          return (
-            <>
-              <span
-                className={`${
-                  element.attributes.italic ? 'italic' : ''
-                } ${element.attributes.bold ? 'font-bold' : ''} ${
-                  element.attributes.underline ? 'underline' : ''
-                } ${element.attributes.link ? 'link' : ''} ${
-                  element.attributes.heading ? 'heading' : ''
-                }`}
-              >
-                {element.insert}
-              </span>
-            </>
-          );
-        })
+    <div className="text-black text-lg text-center">
+      {textConvertedToJSON?.ops[0]
+        ? textConvertedToJSON.ops.map((element) => {
+            return (
+              <>
+                <span
+                  className={`${
+                    element.attributes.italic ? 'italic' : ''
+                  } ${element.attributes.bold ? 'font-bold' : ''} ${
+                    element.attributes.underline ? 'underline' : ''
+                  } ${element.attributes.link ? 'link' : ''} ${
+                    element.attributes.heading ? 'heading' : ''
+                  }`}
+                >
+                  {element.insert}
+                </span>
+              </>
+            );
+          })
+        : ''}
+      {isClickedInside ? (
+        <span className="animate-toggle">|</span>
+      ) : textConvertedToJSON?.ops[0] ? (
+        ''
       ) : (
         <p className=" text-gray-400 ">Write tour Text here...</p>
-      )}
-      {inputFocusedOn ? (
-        <span className="animate-toggle">|</span>
-      ) : (
-        ''
       )}
     </div>
   );

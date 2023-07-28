@@ -12,7 +12,7 @@ type Props = {
 const CustomButton = ({
   name = 'button',
   bgColor = 'bg-primary',
-  color = 'texte-ehite',
+  color = 'text-black',
   width = 'w-32',
   height = 'h-10',
   additionalCSS = '',
@@ -28,7 +28,7 @@ const CustomButton = ({
       type="submit"
       onClick={handleLogin}
       className={
-        ' flex signIn items-center justify-center bg-primary rounded-md text-base ' +
+        ' flex signIn items-center justify-center bg-primary rounded-md text-base text ' +
         color +
         ' ' +
         additionalCSS +

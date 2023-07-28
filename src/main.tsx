@@ -7,11 +7,13 @@ import {
 } from 'react-router-dom';
 import Testing from './pages/Testing';
 import EditorJsonApproach from './pages/EditorJsonApproach';
+import ErrorPage from './pages/Error';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <EditorJsonApproach />,
+    errorElement: <ErrorPage />,
   },
   {
     path: '/testing',

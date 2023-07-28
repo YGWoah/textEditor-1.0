@@ -1,4 +1,4 @@
-import { KeyboardEvent, useState } from 'react';
+import { useEffect, KeyboardEvent, useState, useRef } from 'react';
 import JsonDiplayer from './JsonDiplayer';
 
 type TextStyle = {
@@ -160,7 +160,6 @@ const CustomTextFeild = ({
       });
     } else if (event.ctrlKey && key === 'Backspace') {
       setTitle('');
-      console.log();
     } else if (key === 'Backspace') {
       setTitle((prevState) => {
         return prevState.slice(0, -1);
@@ -168,8 +167,28 @@ const CustomTextFeild = ({
     }
   };
 
+  const targetDivRef = useRef<HTMLDivElement>(null);
+  const [isClickedInside, setIsClickedInside] = useState(false);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      targetDivRef.current &&
+      !targetDivRef.current.contains(event.target as Node)
+    ) {
+      setIsClickedInside(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div>
+    <div className="flex items-center flex-col w-full">
       <div
         className="font-bold text-3xl"
         tabIndex={0}
@@ -180,13 +199,20 @@ const CustomTextFeild = ({
         {title.length > 0 ? title : 'Post title here...'}
       </div>
       <div
+        onClick={() => {
+          setIsClickedInside(true);
+        }}
         tabIndex={0}
         onKeyDown={(e) => {
           handleKeyDown(e);
         }}
-        className="cursor-text w-full h-96 rounded-lg bg-gray-50 "
+        ref={targetDivRef}
+        className="cursor-text w-full md:w-2/3 h-96 rounded-lg bg-gray-50 break-words p-4"
       >
-        <JsonDiplayer textConvertedToJSON={textConvertedToJSON} />
+        <JsonDiplayer
+          textConvertedToJSON={textConvertedToJSON}
+          isClickedInside={isClickedInside}
+        />
       </div>
     </div>
   );
