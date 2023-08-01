@@ -8,12 +8,18 @@ import {
 import Testing from './pages/Testing';
 import EditorJsonApproach from './pages/EditorJsonApproach';
 import ErrorPage from './pages/Error';
+import Editor from './pages/Editor';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <EditorJsonApproach />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: '/editor',
+    element: <Editor />,
+    // errorElement: <ErrorPage />,
   },
   {
     path: '/testing',
