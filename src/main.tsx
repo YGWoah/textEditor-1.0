@@ -9,6 +9,7 @@ import Testing from './pages/Testing';
 import EditorJsonApproach from './pages/EditorJsonApproach';
 import ErrorPage from './pages/Error';
 import Editor from './pages/Editor';
+import NotFound from './pages/NotFound';
 
 const router = createBrowserRouter([
   {
@@ -19,11 +20,16 @@ const router = createBrowserRouter([
   {
     path: '/editor',
     element: <Editor />,
-    // errorElement: <ErrorPage />,
+    errorElement: <ErrorPage />,
   },
   {
     path: '/testing',
     element: <Testing />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
+    errorElement: <ErrorPage />,
   },
 ]);
 
