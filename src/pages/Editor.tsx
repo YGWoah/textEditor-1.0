@@ -1,14 +1,7 @@
-import { useState } from 'react';
-import CustomButton from '../components/CutomButton';
-import CustomTextFeild_2 from '../components/CustumTextFeild_2';
-
-type TextStyle = {
-  italic: boolean;
-  bold: boolean;
-  underline: boolean;
-  link: boolean;
-  heading: boolean;
-};
+import { useState } from "react";
+import CustomButton from "../components/CutomButton";
+import CustomTextFeild_2 from "../components/CustumTextFeild_2";
+import { TextStyle, JustifyValue } from "../types/types";
 
 const Editor = () => {
   const [textStyle, setTestStyle] = useState<TextStyle>({
@@ -18,6 +11,7 @@ const Editor = () => {
     link: false,
     heading: false,
   });
+  const [justify, setJustify] = useState<JustifyValue>("left");
 
   return (
     <div className=" w-full flex justify-center items-center flex-col">
@@ -59,8 +53,8 @@ const Editor = () => {
               }));
             }}
             className={
-              'text-xl p-2 rounded cursor-pointer hover:bg-gray-100 ' +
-              (textStyle.bold ? '  text-black' : 'text-gray-500  ')
+              "text-xl p-2 rounded cursor-pointer hover:bg-gray-100 " +
+              (textStyle.bold ? "  text-black" : "text-gray-500  ")
             }
           >
             <span className=" font-extrabold ">B</span>
@@ -74,8 +68,8 @@ const Editor = () => {
               }));
             }}
             className={
-              'text-xl p-2 rounded cursor-pointer hover:bg-gray-100 ' +
-              (textStyle.italic ? '  text-black' : 'text-gray-500  ')
+              "text-xl p-2 rounded cursor-pointer hover:bg-gray-100 " +
+              (textStyle.italic ? "  text-black" : "text-gray-500  ")
             }
           >
             <span className=" italic uppercase  ">I</span>
@@ -89,35 +83,45 @@ const Editor = () => {
               }));
             }}
             className={
-              'text-xl p-2 rounded cursor-pointer hover:bg-gray-100 ' +
-              (textStyle.underline
-                ? '  text-black'
-                : 'text-gray-500  ')
+              "text-xl p-2 rounded cursor-pointer hover:bg-gray-100 " +
+              (textStyle.underline ? "  text-black" : "text-gray-500  ")
             }
           >
             <span className=" underline uppercase  ">U</span>
           </button>
         </div>
         <div className="flex  items-center justify-end border-l-2 border-gray-500 px-4">
-          <button>
-            <img
-              src="./assets/align-right.png"
-              alt="right"
-              className="w-8 opacity-50"
-            />
-          </button>
-          <button>
-            <img
-              src="./assets/align-center.png"
-              alt="center"
-              className="w-8"
-            />
-          </button>
-          <button>
+          <button
+            onClick={() => {
+              setJustify("left");
+            }}
+          >
             <img
               src="./assets/align-left.png"
               alt="left"
-              className="w-8"
+              className={"w-8" + (justify === "left" ? null : " opacity-50")}
+            />
+          </button>
+          <button
+            onClick={() => {
+              setJustify("center");
+            }}
+          >
+            <img
+              src="./assets/align-center.png"
+              alt="center"
+              className={"w-8" + (justify === "center" ? null : " opacity-50")}
+            />
+          </button>
+          <button
+            onClick={() => {
+              setJustify("right");
+            }}
+          >
+            <img
+              src="./assets/align-right.png"
+              alt="right"
+              className={"w-8" + (justify === "right" ? null : " opacity-50")}
             />
           </button>
         </div>
@@ -142,6 +146,8 @@ const Editor = () => {
       <CustomTextFeild_2
         textStyle={textStyle}
         setTextStyle={setTestStyle}
+        justify={justify}
+        setJustify={setJustify}
       />
     </div>
   );

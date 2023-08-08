@@ -5,26 +5,20 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from 'react-router-dom';
-import Testing from './pages/Testing';
-import EditorJsonApproach from './pages/EditorJsonApproach';
 import ErrorPage from './pages/Error';
 import Editor from './pages/Editor';
 import NotFound from './pages/NotFound';
+import Editor_testing from './pages/Editor_testing';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <EditorJsonApproach />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: '/editor',
     element: <Editor />,
     errorElement: <ErrorPage />,
   },
   {
     path: '/testing',
-    element: <Testing />,
+    element: <Editor_testing />,
   },
   {
     path: '*',

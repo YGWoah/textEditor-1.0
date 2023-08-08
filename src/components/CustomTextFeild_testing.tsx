@@ -1,5 +1,14 @@
 import { useEffect, KeyboardEvent, useState, useRef } from 'react';
-import JsonDiplayer from './JsonDiplayer';
+import JsonDiplayer_2 from './JsonDisplay_2';
+// type TextStyle = {
+//   italic: boolean;
+//   bold: boolean;
+//   underline: boolean;
+//   link: string | null;
+//   heading: boolean;
+//   color: string;
+//   fontSize: string;
+// };
 
 type TextStyle = {
   italic: boolean;
@@ -9,21 +18,30 @@ type TextStyle = {
   heading: boolean;
 };
 
-type OpsArray = {
+type TextSegment = {
   insert: string;
   attributes: TextStyle;
-}[];
+};
+
+type JustifyValue = 'left' | 'center' | 'right';
+
+type Paragraph = {
+  textSegments: TextSegment[];
+  justify: JustifyValue;
+};
 
 type TextConvertedToJSON = {
-  ops: OpsArray;
+  paragraphs: Paragraph[];
 } | null;
 
-const CustomTextFeild = ({
+const CustomTextFeild_testing = ({
   textStyle,
   setTextStyle,
+  justify,
 }: {
   textStyle: TextStyle;
   setTextStyle: React.Dispatch<React.SetStateAction<TextStyle>>;
+  justify: JustifyValue;
 }) => {
   const [textConvertedToJSON, setTextConvertedToJSON] =
     useState<TextConvertedToJSON>(null);
@@ -34,6 +52,7 @@ const CustomTextFeild = ({
     const keyIsNormalLetter = /^[a-zA-Z]$/.test(key);
 
     const changeTextStyle = (key: keyof TextStyle) => {
+      // this function is used to change the text style becasue there's a lot of repetition in the code
       setTextStyle((prevState: TextStyle) => ({
         ...prevState,
         [key]: !prevState[key],
@@ -55,90 +74,124 @@ const CustomTextFeild = ({
       } else if (event.ctrlKey && key === 'Backspace') {
         event.preventDefault(); // Prevent the default browser behavior
         if (!textConvertedToJSON) return;
-        let updatedOps = textConvertedToJSON?.ops;
-        if (updatedOps.length === 0) return;
-        updatedOps.pop(); // Remove the last element
+        let updatedParagraphs = textConvertedToJSON.paragraphs;
+        if (updatedParagraphs.length === 0) return;
+        let lastParagraph =
+          updatedParagraphs[updatedParagraphs.length - 1];
+        let updatedTextSegments = lastParagraph.textSegments;
+        if (updatedTextSegments.length === 0) return;
+        updatedTextSegments.pop();
+        if (updatedTextSegments.length === 0) {
+          updatedParagraphs.pop();
+        }
         setTextConvertedToJSON({
-          ops: updatedOps,
+          paragraphs: updatedParagraphs,
         });
       } else if (key === 'Backspace') {
         // Handle Backspace
-        let updatedOps = textConvertedToJSON?.ops;
-        if (!updatedOps || updatedOps.length === 0) {
-          return;
+        if (!textConvertedToJSON) return;
+        let updatedParagraphs = textConvertedToJSON.paragraphs;
+        if (updatedParagraphs.length === 0) return;
+        let lastParagraph =
+          updatedParagraphs[updatedParagraphs.length - 1];
+        let updatedTextSegments = lastParagraph.textSegments;
+        if (updatedTextSegments.length === 0) return;
+        let lastTextSegment =
+          updatedTextSegments[updatedTextSegments.length - 1];
+        if (lastTextSegment.insert.length > 0) {
+          lastTextSegment.insert = lastTextSegment.insert.slice(
+            0,
+            -1
+          );
         } else {
-          let lastInsert = updatedOps[updatedOps.length - 1];
-          if (lastInsert && lastInsert.insert.length > 0) {
-            lastInsert.insert = lastInsert.insert.slice(0, -1);
-            if (lastInsert.insert.length === 0) {
-              updatedOps.pop();
-            } else updatedOps[updatedOps?.length - 1] = lastInsert;
-          } else {
-            updatedOps.pop();
-          }
-          setTextConvertedToJSON({
-            ops: updatedOps,
-          });
+          updatedTextSegments.pop();
         }
+        if (updatedTextSegments.length === 0) {
+          updatedParagraphs.pop();
+        }
+        setTextConvertedToJSON({
+          paragraphs: updatedParagraphs,
+        });
       } else if (key === ' ') {
         event.preventDefault();
 
         setTextConvertedToJSON((prevTextConvertedToJSON) => {
           if (prevTextConvertedToJSON) {
-            let updatedOps = prevTextConvertedToJSON.ops;
-            updatedOps[updatedOps.length - 1].insert += ' ';
+            let updatedParagraphs =
+              prevTextConvertedToJSON.paragraphs;
+            let lastParagraph =
+              updatedParagraphs[updatedParagraphs.length - 1];
+            let updatedTextSegments = lastParagraph.textSegments;
+            updatedTextSegments[
+              updatedTextSegments.length - 1
+            ].insert += ' ';
             return {
-              ops: updatedOps,
+              paragraphs: updatedParagraphs,
             };
           }
           return null;
         });
       } else if (key === 'Enter') {
         // Handle Enter
-
         setTextConvertedToJSON((prevTextConvertedToJSON) => {
           if (prevTextConvertedToJSON) {
-            let updatedOps = prevTextConvertedToJSON.ops;
-            updatedOps[updatedOps.length - 1].insert += '\n';
+            const updatedParagraphs = [
+              ...prevTextConvertedToJSON.paragraphs,
+            ];
+            const lastParagraph =
+              updatedParagraphs[updatedParagraphs.length - 1];
+            const updatedTextSegments = lastParagraph.textSegments;
+            updatedTextSegments[
+              updatedTextSegments.length - 1
+            ].insert += '\n';
+
+            // Create a new paragraph with an empty text segment
+            const newParagraph: Paragraph = {
+              textSegments: [{ insert: '', attributes: textStyle }],
+              justify: justify,
+            };
+
             return {
-              ops: updatedOps,
+              paragraphs: [...updatedParagraphs, newParagraph],
             };
           }
           return null;
         });
       } else if (keyIsNormalLetter) {
-        if (
-          textConvertedToJSON &&
-          textConvertedToJSON?.ops?.length > 0
-        ) {
-          let lastInsert =
-            textConvertedToJSON.ops[
-              textConvertedToJSON.ops.length - 1
-            ];
-
-          if (lastInsert.attributes !== textStyle) {
+        if (textConvertedToJSON?.paragraphs[0]) {
+          let updatedParagraphs = textConvertedToJSON.paragraphs;
+          let lastParagraph =
+            updatedParagraphs[updatedParagraphs.length - 1];
+          let updatedTextSegments = lastParagraph?.textSegments;
+          if (
+            updatedTextSegments.length === 0 ||
+            lastParagraph.textSegments[
+              lastParagraph.textSegments.length - 1
+            ].attributes !== textStyle
+          ) {
+            updatedTextSegments.push({
+              insert: key,
+              attributes: textStyle,
+            });
             setTextConvertedToJSON({
-              ops: [
-                ...textConvertedToJSON.ops,
-                {
-                  insert: key,
-                  attributes: textStyle,
-                },
-              ],
+              paragraphs: updatedParagraphs,
             });
           } else {
-            let updatedOps = textConvertedToJSON.ops;
-            updatedOps[updatedOps.length - 1].insert += key;
+            let lastTextSegment =
+              updatedTextSegments[updatedTextSegments.length - 1];
+            lastTextSegment.insert += key;
             setTextConvertedToJSON({
-              ops: updatedOps,
+              paragraphs: updatedParagraphs,
             });
           }
         } else {
           setTextConvertedToJSON({
-            ops: [
+            paragraphs: [
               {
-                insert: key,
-                attributes: textStyle,
+                textSegments: [
+                  { insert: key, attributes: textStyle },
+                ],
+                justify: justify,
               },
             ],
           });
@@ -187,6 +240,9 @@ const CustomTextFeild = ({
     };
   }, []);
 
+  console.log(textConvertedToJSON);
+  console.log(isClickedInside);
+
   return (
     <div className="flex items-center flex-col w-full">
       <div
@@ -209,7 +265,7 @@ const CustomTextFeild = ({
         ref={targetDivRef}
         className="cursor-text w-full md:w-2/3 h-96 rounded-lg bg-gray-50 break-words p-4"
       >
-        <JsonDiplayer
+        <JsonDiplayer_2
           textConvertedToJSON={textConvertedToJSON}
           isClickedInside={isClickedInside}
         />
@@ -218,4 +274,4 @@ const CustomTextFeild = ({
   );
 };
 
-export default CustomTextFeild;
+export default CustomTextFeild_testing;

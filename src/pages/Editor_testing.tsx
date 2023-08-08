@@ -1,16 +1,9 @@
-import { useState } from 'react';
-import CustomTextFeild from '../components/CustomTextFeild';
-import CustomButton from '../components/CutomButton';
+import { useState } from "react";
+import CustomButton from "../components/CutomButton";
+import CustomTextFeild_2 from "../components/CustumTextFeild_2";
+import { JustifyValue, TextStyle } from "../types/types";
 
-type TextStyle = {
-  italic: boolean;
-  bold: boolean;
-  underline: boolean;
-  link: boolean;
-  heading: boolean;
-};
-
-const EditorJsonApproach = () => {
+const Editor_testing = () => {
   const [textStyle, setTestStyle] = useState<TextStyle>({
     italic: false,
     bold: false,
@@ -18,6 +11,7 @@ const EditorJsonApproach = () => {
     link: false,
     heading: false,
   });
+  const [justify, setJustify] = useState<JustifyValue>("left");
 
   return (
     <div className=" w-full flex justify-center items-center flex-col">
@@ -59,8 +53,8 @@ const EditorJsonApproach = () => {
               }));
             }}
             className={
-              'p-2 rounded cursor-pointer hover:bg-gray-100 ' +
-              (textStyle.bold ? '  text-black' : 'text-gray-500  ')
+              "text-xl p-2 rounded cursor-pointer hover:bg-gray-100 " +
+              (textStyle.bold ? "  text-black" : "text-gray-500  ")
             }
           >
             <span className=" font-extrabold ">B</span>
@@ -74,8 +68,8 @@ const EditorJsonApproach = () => {
               }));
             }}
             className={
-              'p-2 rounded cursor-pointer hover:bg-gray-100 ' +
-              (textStyle.italic ? '  text-black' : 'text-gray-500  ')
+              "text-xl p-2 rounded cursor-pointer hover:bg-gray-100 " +
+              (textStyle.italic ? "  text-black" : "text-gray-500  ")
             }
           >
             <span className=" italic uppercase  ">I</span>
@@ -89,46 +83,73 @@ const EditorJsonApproach = () => {
               }));
             }}
             className={
-              'p-2 rounded cursor-pointer hover:bg-gray-100 ' +
-              (textStyle.underline
-                ? '  text-black'
-                : 'text-gray-500  ')
+              "text-xl p-2 rounded cursor-pointer hover:bg-gray-100 " +
+              (textStyle.underline ? "  text-black" : "text-gray-500  ")
             }
           >
             <span className=" underline uppercase  ">U</span>
           </button>
         </div>
         <div className="flex  items-center justify-end border-l-2 border-gray-500 px-4">
-          <button>
-            <img
-              src="./assets/align-right.png"
-              alt="right"
-              className="w-6 opacity-50"
-            />
-          </button>
-          <button>
-            <img
-              src="./assets/align-center.png"
-              alt="center"
-              className="w-6"
-            />
-          </button>
-          <button>
+          <button
+            onClick={() => {
+              setJustify("left");
+            }}
+          >
             <img
               src="./assets/align-left.png"
               alt="left"
-              className="w-6"
+              className={"w-8" + (justify === "left" ? null : " opacity-50")}
+            />
+          </button>
+          <button
+            onClick={() => {
+              setJustify("center");
+            }}
+          >
+            <img
+              src="./assets/align-center.png"
+              alt="center"
+              className={"w-8" + (justify === "center" ? null : " opacity-50")}
+            />
+          </button>
+          <button
+            onClick={() => {
+              setJustify("right");
+            }}
+          >
+            <img
+              src="./assets/align-right.png"
+              alt="right"
+              className={"w-8" + (justify === "right" ? null : " opacity-50")}
+            />
+          </button>
+        </div>
+        <div className="flex  items-center justify-end border-l-2 border-gray-500 px-4">
+          <button>
+            <img
+              src="./assets/numbered-list.png"
+              alt="right"
+              className="w-8 "
+            />
+          </button>
+          <button>
+            <img
+              src="./assets/bulleted-list.png"
+              alt="center"
+              className="w-8"
             />
           </button>
         </div>
       </div>
 
-      <CustomTextFeild
+      <CustomTextFeild_2
         textStyle={textStyle}
         setTextStyle={setTestStyle}
+        justify={justify}
       />
     </div>
   );
 };
 
-export default EditorJsonApproach;
+export default Editor_testing;
