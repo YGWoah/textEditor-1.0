@@ -24,11 +24,11 @@ type TextConvertedToJSON = {
   paragraphs: Paragraph[];
 } | null;
 
-type CursorPosition = {
-  paragraphIndex: number;
-  textSegmentIndex: number;
-  position: number;
-} | null;
+// type CursorPosition = {
+//   paragraphIndex: number;
+//   textSegmentIndex: number;
+//   position: number;
+// } | null;
 
 const handleKeyDown = (
   event: KeyboardEvent<HTMLDivElement>,
@@ -39,8 +39,8 @@ const handleKeyDown = (
     React.SetStateAction<TextConvertedToJSON>
   >,
   setJustify: React.Dispatch<React.SetStateAction<JustifyValue>>,
-  justify: JustifyValue,
-  setCursorPosition: React.Dispatch<React.SetStateAction<CursorPosition>>
+  justify: JustifyValue
+  // setCursorPosition: React.Dispatch<React.SetStateAction<CursorPosition>>
 ) => {
   const key = event.key;
   const keyIsNormalLetter = /^[a-zA-Z]$/.test(key);
