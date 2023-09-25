@@ -12,7 +12,6 @@ const router = createBrowserRouter([
     element: <Editor />,
     errorElement: <ErrorPage />,
   },
-
   {
     path: "*",
     element: <NotFound />,

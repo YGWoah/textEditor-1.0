@@ -1,6 +1,6 @@
-import { TextConvertedToJSON } from "../types/types";
+import { TextConvertedToJSON } from "../../types/types";
 
-const JsonDiplayer_2 = ({
+const JsonDiplayer = ({
   textConvertedToJSON,
   isClickedInside,
 }: {
@@ -49,4 +49,4 @@ const JsonDiplayer_2 = ({
   );
 };
 
-export default JsonDiplayer_2;
+export default JsonDiplayer;
