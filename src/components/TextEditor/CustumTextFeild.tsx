@@ -57,6 +57,7 @@ const CustomTextFeild = ({
       return null;
     });
   }, [justify]);
+  console.log(cursorPositin);
 
   return (
     <div className="flex items-center flex-col w-full">
