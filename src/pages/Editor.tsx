@@ -3,6 +3,7 @@ import CustomTextFeild from "../components/TextEditor/CustumTextFeild";
 import { TextStyle, JustifyValue } from "../types/types";
 import Header from "../components/Layouts/Header";
 import TextToolbar from "../components/TextEditor/TextToolbar";
+import textFormattingStateContext from "../context/TextFormattingStateContext";
 
 const Editor = () => {
   const [textStyle, setTestStyle] = useState<TextStyle>({
@@ -17,18 +18,12 @@ const Editor = () => {
   return (
     <div className=" w-full flex justify-center items-center flex-col">
       <Header />
-      <TextToolbar
-        textStyle={textStyle}
-        setTestStyle={setTestStyle}
-        justify={justify}
-        setJustify={setJustify}
-      />
-      <CustomTextFeild
-        textStyle={textStyle}
-        setTextStyle={setTestStyle}
-        justify={justify}
-        setJustify={setJustify}
-      />
+      <textFormattingStateContext.Provider
+        value={{ textStyle, setTestStyle, justify, setJustify }}
+      >
+        <TextToolbar />
+        <CustomTextFeild />
+      </textFormattingStateContext.Provider>
     </div>
   );
 };

@@ -1,30 +1,18 @@
-import { useEffect, useState, useRef } from "react";
-import {
-  CursorPosition,
-  TextConvertedToJSON,
-  TextStyle,
-  JustifyValue,
-} from "../../types/types";
+import { useEffect, useState, useRef, useContext } from "react";
+import { CursorPosition, TextConvertedToJSON } from "../../types/types";
 import TitleInput from "../Inputs/TitleInput";
 import TextEditor from "./TextEditor";
+import textFormattingStateContext from "../../context/TextFormattingStateContext";
 
-const CustomTextFeild = ({
-  textStyle,
-  setTextStyle,
-  justify,
-  setJustify,
-}: {
-  textStyle: TextStyle;
-  setTextStyle: React.Dispatch<React.SetStateAction<TextStyle>>;
-  justify: JustifyValue;
-  setJustify: React.Dispatch<React.SetStateAction<JustifyValue>>;
-}) => {
+const CustomTextFeild = ({}: {}) => {
   const [textConvertedToJSON, setTextConvertedToJSON] =
     useState<TextConvertedToJSON>(null);
   const [title, setTitle] = useState<string>("");
   const [cursorPositin, setCursorPosition] = useState<CursorPosition>(null);
   const targetDivRef = useRef<HTMLDivElement>(null);
   const [isClickedInside, setIsClickedInside] = useState(false);
+
+  const justify = useContext(textFormattingStateContext).justify;
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -64,12 +52,8 @@ const CustomTextFeild = ({
       <TitleInput title={title} setTitle={setTitle} />
       <TextEditor
         setIsClickedInside={setIsClickedInside}
-        textStyle={textStyle}
-        setTextStyle={setTextStyle}
         textConvertedToJSON={textConvertedToJSON}
         setTextConvertedToJSON={setTextConvertedToJSON}
-        setJustify={setJustify}
-        justify={justify}
         setCursorPosition={setCursorPosition}
         targetDivRef={targetDivRef}
         isClickedInside={isClickedInside}

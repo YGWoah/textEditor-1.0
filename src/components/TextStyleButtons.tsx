@@ -1,14 +1,10 @@
 import toggleTextStyle from "../utils/toggleTextStyle";
 import TextStyleButton from "./Buttons/TextStyleButton";
-import { TextStyle } from "../types/types";
-
-const TextStyleButtons = ({
-  textStyle,
-  setTextStyle,
-}: {
-  textStyle: TextStyle;
-  setTextStyle: React.Dispatch<React.SetStateAction<TextStyle>>;
-}) => {
+import { useContext } from "react";
+import textStyleContext from "../context/TextFormattingStateContext";
+const TextStyleButtons = () => {
+  const textStyle = useContext(textStyleContext).textStyle;
+  const setTextStyle = useContext(textStyleContext).setTestStyle;
   return (
     <div>
       <TextStyleButton

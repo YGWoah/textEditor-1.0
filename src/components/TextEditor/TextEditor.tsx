@@ -1,36 +1,31 @@
+import React, { useContext } from "react";
 import handleKeyDown from "../../utils/HandleKeyDown";
-import {
-  TextStyle,
-  TextConvertedToJSON,
-  CursorPosition,
-} from "../../types/types";
+import { TextConvertedToJSON, CursorPosition } from "../../types/types";
 import JsonDiplayer from "./JsonDisplay";
+import textFormattingStateContext from "../../context/TextFormattingStateContext";
 
 const TextEditor = ({
   setIsClickedInside,
-  textStyle,
-  setTextStyle,
   textConvertedToJSON,
   setTextConvertedToJSON,
-  setJustify,
-  justify,
   setCursorPosition,
   targetDivRef,
   isClickedInside,
 }: {
   setIsClickedInside: React.Dispatch<React.SetStateAction<boolean>>;
-  textStyle: TextStyle;
-  setTextStyle: React.Dispatch<React.SetStateAction<TextStyle>>;
   textConvertedToJSON: TextConvertedToJSON;
   setTextConvertedToJSON: React.Dispatch<
     React.SetStateAction<TextConvertedToJSON>
   >;
-  setJustify: React.Dispatch<React.SetStateAction<"left" | "center" | "right">>;
-  justify: "left" | "center" | "right";
   setCursorPosition: React.Dispatch<React.SetStateAction<CursorPosition>>;
   targetDivRef: React.RefObject<HTMLDivElement>;
   isClickedInside: boolean;
 }) => {
+  const textStyle = useContext(textFormattingStateContext).textStyle;
+  const setTestStyle = useContext(textFormattingStateContext).setTestStyle;
+  const justify = useContext(textFormattingStateContext).justify;
+  const setJustify = useContext(textFormattingStateContext).setJustify;
+
   return (
     <div
       onClick={() => {
@@ -41,7 +36,7 @@ const TextEditor = ({
         handleKeyDown(
           e,
           textStyle,
-          setTextStyle,
+          setTestStyle,
           textConvertedToJSON,
           setTextConvertedToJSON,
           setJustify,
