@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CustomTextFeild from "../components/TextEditor/CustumTextFeild";
 import { TextStyle, JustifyValue } from "../types/types";
-import Header from "../components/Layouts/Header";
+// import Header from "../components/Layouts/Header";
 import TextToolbar from "../components/TextEditor/TextToolbar";
 import textFormattingStateContext from "../context/TextFormattingStateContext";
 
@@ -17,7 +17,7 @@ const Editor = () => {
 
   return (
     <div className=" w-full flex justify-center items-center flex-col">
-      <Header />
+      {/* <Header /> */}
       <textFormattingStateContext.Provider
         value={{ textStyle, setTestStyle, justify, setJustify }}
       >

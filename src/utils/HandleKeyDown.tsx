@@ -9,6 +9,7 @@ import {
 import handlingEnterKey from "./HandlingKeys/handleEnterKey";
 import handleCtrlBackspace from "./HandlingKeys/handleCtrlBackSpace";
 import handleBackSpace from "./HandlingKeys/handleBackSpace";
+import handleSpaceBar from "./HandlingKeys/handleSpaceBar";
 
 const handleKeyDown = (
   event: KeyboardEvent<HTMLDivElement>,
@@ -68,19 +69,7 @@ const handleKeyDown = (
       );
     else if (key === " ") {
       event.preventDefault();
-
-      setTextConvertedToJSON((prevTextConvertedToJSON) => {
-        if (prevTextConvertedToJSON) {
-          let updatedParagraphs = prevTextConvertedToJSON.paragraphs;
-          let lastParagraph = updatedParagraphs[updatedParagraphs.length - 1];
-          let updatedTextSegments = lastParagraph.textSegments;
-          updatedTextSegments[updatedTextSegments.length - 1].insert += " ";
-          return {
-            paragraphs: updatedParagraphs,
-          };
-        }
-        return null;
-      });
+      handleSpaceBar(setTextConvertedToJSON);
     } else if (key === "Enter")
       handlingEnterKey(textStyle, setTextConvertedToJSON, justify);
     else if (keyIsNormalLetter)
