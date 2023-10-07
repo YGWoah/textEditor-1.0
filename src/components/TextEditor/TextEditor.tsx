@@ -5,14 +5,12 @@ import JsonDiplayer from "./JsonDisplay";
 import textFormattingStateContext from "../../context/TextFormattingStateContext";
 
 const TextEditor = ({
-  setIsClickedInside,
   textConvertedToJSON,
   setTextConvertedToJSON,
   setCursorPosition,
   targetDivRef,
   isClickedInside,
 }: {
-  setIsClickedInside: React.Dispatch<React.SetStateAction<boolean>>;
   textConvertedToJSON: TextConvertedToJSON;
   setTextConvertedToJSON: React.Dispatch<
     React.SetStateAction<TextConvertedToJSON>
@@ -28,9 +26,6 @@ const TextEditor = ({
 
   return (
     <div
-      onClick={() => {
-        setIsClickedInside(true);
-      }}
       tabIndex={0}
       onKeyDown={(e) => {
         handleKeyDown(
