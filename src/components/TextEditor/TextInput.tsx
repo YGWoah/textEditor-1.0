@@ -3,13 +3,14 @@ import handleKeyDown from "../../utils/HandleKeyDown";
 import { TextConvertedToJSON, CursorPosition } from "../../types/types";
 import JsonDiplayer from "./JsonDisplay";
 import textFormattingStateContext from "../../context/TextFormattingStateContext";
-
-const TextEditor = ({
+import CircularBuffer from "../../utils/CircularBuffer";
+const TextInput = ({
   textConvertedToJSON,
   setTextConvertedToJSON,
   setCursorPosition,
   targetDivRef,
   isClickedInside,
+  undoStack,
 }: {
   textConvertedToJSON: TextConvertedToJSON;
   setTextConvertedToJSON: React.Dispatch<
@@ -18,6 +19,7 @@ const TextEditor = ({
   setCursorPosition: React.Dispatch<React.SetStateAction<CursorPosition>>;
   targetDivRef: React.RefObject<HTMLDivElement>;
   isClickedInside: boolean;
+  undoStack: React.MutableRefObject<CircularBuffer>;
 }) => {
   const textStyle = useContext(textFormattingStateContext).textStyle;
   const setTestStyle = useContext(textFormattingStateContext).setTestStyle;
@@ -36,8 +38,14 @@ const TextEditor = ({
           setTextConvertedToJSON,
           setJustify,
           justify,
-          setCursorPosition
+          setCursorPosition,
+          undoStack
         );
+      }}
+      onClick={() => {
+        console.log(targetDivRef.current);
+
+        targetDivRef.current?.focus();
       }}
       ref={targetDivRef}
       className="cursor-text w-full md:w-2/3 h-96 rounded-lg bg-gray-50 break-words p-4"
@@ -50,4 +58,4 @@ const TextEditor = ({
   );
 };
 
-export default TextEditor;
+export default TextInput;

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import TextAlignmentButton from "./Buttons/TextAlignmentButton";
-import textFormattingStateContext from "../context/TextFormattingStateContext";
+import TextAlignmentButton from "../Buttons/TextAlignmentButton";
+import textFormattingStateContext from "../../context/TextFormattingStateContext";
 const isActive = (
   justify: "left" | "center" | "right",
   active: "left" | "center" | "right"

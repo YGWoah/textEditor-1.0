@@ -6,7 +6,7 @@ import {
   CursorPosition,
 } from "../../types/types";
 
-const handleNormalKey = (
+const insertNormalLetter = (
   key: string,
   textConvertedToJSON: TextConvertedToJSON,
   textStyle: TextStyle,
@@ -64,4 +64,4 @@ const handleNormalKey = (
   });
 };
 
-export default handleNormalKey;
+export default insertNormalLetter;
