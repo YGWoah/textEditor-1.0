@@ -2,13 +2,20 @@ import React from "react";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./pages/Error";
-import Editor from "./pages/Editor";
+import TextEditor from "./pages/TextEditor";
+import Testing from "./pages/Testing";
 import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Editor />,
+    element: <TextEditor />,
+    errorElement: <ErrorPage />,
+  },
+
+  {
+    path: "/testing",
+    element: <Testing />,
     errorElement: <ErrorPage />,
   },
   {
