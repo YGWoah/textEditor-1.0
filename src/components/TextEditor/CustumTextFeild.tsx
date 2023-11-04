@@ -1,13 +1,24 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import { CursorPosition, TextConvertedToJSON } from "../../types/types";
 import TitleInput from "../Inputs/TitleInput";
-import TextEditor from "./TextEditor";
+import TextInput from "./TextInput";
 import textFormattingStateContext from "../../context/TextFormattingStateContext";
 import useClickOutside from "../../hooks/useClickOutside";
+import CircularBuffer from "../../utils/CircularBuffer";
 
-const CustomTextFeild = ({}: {}) => {
-  const [textConvertedToJSON, setTextConvertedToJSON] =
-    useState<TextConvertedToJSON>(null);
+const CustomTextFeild = ({
+  undoStack,
+  textConvertedToJSON,
+  setTextConvertedToJSON,
+}: {
+  undoStack: React.MutableRefObject<CircularBuffer>;
+  textConvertedToJSON: TextConvertedToJSON;
+  setTextConvertedToJSON: React.Dispatch<
+    React.SetStateAction<TextConvertedToJSON>
+  >;
+}) => {
+  // const [textConvertedToJSON, setTextConvertedToJSON] =
+  //   useState<TextConvertedToJSON>(null);
   const [title, setTitle] = useState<string>("");
   const [cursorPositin, setCursorPosition] = useState<CursorPosition>(null);
   const targetDivRef = useRef<HTMLDivElement>(null);
@@ -36,12 +47,13 @@ const CustomTextFeild = ({}: {}) => {
   return (
     <div className="flex items-center flex-col w-full">
       <TitleInput title={title} setTitle={setTitle} />
-      <TextEditor
+      <TextInput
         textConvertedToJSON={textConvertedToJSON}
         setTextConvertedToJSON={setTextConvertedToJSON}
         setCursorPosition={setCursorPosition}
         targetDivRef={targetDivRef}
         isClickedInside={isClickedInside}
+        undoStack={undoStack}
       />
       <p>{cursorPositin?.paragraphIndex}</p>
     </div>
