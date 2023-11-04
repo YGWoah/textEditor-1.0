@@ -17,9 +17,9 @@ const handlingEnterKey = (
   setTextConvertedToJSON((prevTextConvertedToJSON) => {
     if (prevTextConvertedToJSON) {
       const updatedParagraphs = [...prevTextConvertedToJSON.paragraphs];
-      const lastParagraph = updatedParagraphs[updatedParagraphs.length - 1];
-      const updatedTextSegments = lastParagraph.textSegments;
-      updatedTextSegments[updatedTextSegments.length - 1].insert += "\n";
+      // const lastParagraph = updatedParagraphs[updatedParagraphs.length - 1];
+      // const updatedTextSegments = lastParagraph.textSegments;
+      // updatedTextSegments[updatedTextSegments.length - 1].insert += "\n";
 
       // Create a new paragraph with an empty text segment
       const newParagraph: Paragraph = {
