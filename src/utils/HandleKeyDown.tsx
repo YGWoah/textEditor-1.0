@@ -134,7 +134,10 @@ const handleKeyDown = (
           pushActionToStack("enter", " ", undoStack.current);
           break;
         default:
-          if (/^[a-zA-Z]$/.test(event.key)) {
+          //i want toensure that input pattern is one letter
+          let inputPattern = /^[a-zA-Z0-9?!]$/;
+
+          if (inputPattern.test(event.key)) {
             insertNormalLetter(
               event.key,
               textConvertedToJSON,
