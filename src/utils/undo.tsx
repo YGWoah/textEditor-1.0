@@ -3,6 +3,22 @@ import { JustifyValue, TextConvertedToJSON, TextStyle } from "../types/types";
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import insertNormalLetter from "./HandlingKeys/insertNormalLetter";
 
+/**
+ * Undoes the last action performed on the text editor.
+ *
+ * @param param0 - An object containing the following properties:
+ *   * `undoStack`: A mutable reference object to a circular buffer containing the history of actions performed on the text editor.
+ *   * `textConvertedToJSON`: The current state of the text editor, converted to JSON.
+ *   * `setTextConvertedToJSON`: A dispatch function to set the current state of the text editor.
+ *   * `setTextStyle`: A dispatch function to set the current text style.
+ *   * `textStyle`: The current text style.
+ *   * `setCursorPosition`: A dispatch function to set the current cursor position.
+ *   * `setJustify`: A dispatch function to set the current justification.
+ *   * `justify`: The current justification.
+ *
+ * @returns None.
+ */
+
 const undo = ({
   undoStack,
   textConvertedToJSON = {
@@ -100,11 +116,34 @@ const undo = ({
     }
   };
 
+  const deleteEmptyTextSegment = () => {
+    if (textConvertedToJSON) {
+      const paragraphs = textConvertedToJSON.paragraphs;
+      if (paragraphs.length === 0) return;
+
+      const lastParagraph = paragraphs[paragraphs.length - 1];
+      const textSegments = lastParagraph.textSegments;
+      if (textSegments.length === 0) return;
+
+      const lastTextSegment = textSegments[textSegments.length - 1];
+      const lastText = lastTextSegment.insert;
+
+      if (lastText === "") {
+        paragraphs[paragraphs.length - 1].textSegments.pop();
+        setTextConvertedToJSON(() => ({
+          paragraphs: paragraphs,
+        }));
+      }
+    }
+  };
+
   const changeTextStyle = (key: keyof TextStyle) => {
     setTextStyle((prevState: TextStyle) => ({
       ...prevState,
       [key]: !prevState[key],
     }));
+    //when changing the stye a new insert is created in the textConvertedToJSON so we need to delete it
+    deleteEmptyTextSegment();
   };
 
   let lastAction = undoStack.current.pop();
