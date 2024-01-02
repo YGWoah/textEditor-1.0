@@ -8,7 +8,7 @@ const JsonDiplayer = ({
   isClickedInside: boolean;
 }) => {
   return (
-    <div className="text-black text-lg whitespace-pre">
+    <div className="text-black text-lg whitespace-pre ">
       {textConvertedToJSON?.paragraphs[0]
         ? textConvertedToJSON?.paragraphs.map((paragraph, paragraphIndex) => (
             <p
