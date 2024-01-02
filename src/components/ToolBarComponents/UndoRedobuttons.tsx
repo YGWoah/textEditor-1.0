@@ -17,6 +17,11 @@ const UndoRedoButtons = ({
   >;
 }) => {
   const setTextStyle = useContext(textStyleContext).setTestStyle;
+  const textStyle = useContext(textStyleContext).textStyle;
+  const justify = useContext(textStyleContext).justify;
+  const setJustify = useContext(textStyleContext).setJustify;
+  // const cursorPosition = useContext(textStyleContext).cursorPosition
+  const setCursorPosition = useContext(textStyleContext).setCursorPosition;
 
   return (
     <div>
@@ -28,6 +33,10 @@ const UndoRedoButtons = ({
             setTextConvertedToJSON,
             textConvertedToJSON,
             setTextStyle,
+            textStyle,
+            setCursorPosition,
+            setJustify,
+            justify,
           });
         }}
         className="bg-red-500"
