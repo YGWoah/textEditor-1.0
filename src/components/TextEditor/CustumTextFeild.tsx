@@ -3,7 +3,7 @@ import { TextConvertedToJSON } from "../../types/types";
 import TitleInput from "../Inputs/TitleInput";
 import TextInput from "./TextInput";
 import textFormattingStateContext from "../../context/TextFormattingStateContext";
-import useClickOutside from "../../hooks/useClickOutside";
+import useClickOutside from "../../hooks/useClickInside";
 import CircularBuffer from "../../utils/CircularBuffer";
 
 const CustomTextFeild = ({
@@ -20,13 +20,12 @@ const CustomTextFeild = ({
   // const [textConvertedToJSON, setTextConvertedToJSON] =
   //   useState<TextConvertedToJSON>(null);
   const [title, setTitle] = useState<string>("");
-  const targetDivRef = useRef<HTMLDivElement>(null);
+  // const targetDivRef = useRef<HTMLDivElement>(null);
 
   const justify = useContext(textFormattingStateContext).justify;
 
-  //this is a custom hook that returns true if the user clicks outside the target div
-  let isClickedInside = useClickOutside(targetDivRef);
-
+  // //this is a custom hook that returns true if the user clicks outside the target div
+  // let isClickedInside = useClickOutside(targetDivRef);
   const cursorPositin = useContext(textFormattingStateContext).cursorPosition;
 
   //TO DO : see if i can remove this useEffect
@@ -52,8 +51,8 @@ const CustomTextFeild = ({
       <TextInput
         textConvertedToJSON={textConvertedToJSON}
         setTextConvertedToJSON={setTextConvertedToJSON}
-        targetDivRef={targetDivRef}
-        isClickedInside={isClickedInside}
+        // targetDivRef={targetDivRef}
+        // isClickedInside={isClickedInside}
         undoStack={undoStack}
       />
       <p>{cursorPositin?.paragraphIndex}</p>
