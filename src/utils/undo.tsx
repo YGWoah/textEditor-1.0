@@ -2,6 +2,7 @@ import CircularBuffer from "./CircularBuffer";
 import { JustifyValue, TextConvertedToJSON, TextStyle } from "../types/types";
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import insertNormalLetter from "./HandlingKeys/insertNormalLetter";
+import { text } from "stream/consumers";
 
 /**
  * Undoes the last action performed on the text editor.
@@ -40,100 +41,90 @@ const undo = ({
   setJustify: Dispatch<SetStateAction<JustifyValue>>;
   justify: JustifyValue;
 }) => {
+  if (!textConvertedToJSON) return { paragraphs: [] };
+  console.log(textConvertedToJSON);
+  let lastAction = undoStack.current.pop();
+
+  const isItPossibleToUndo = () =>
+    textConvertedToJSON &&
+    textConvertedToJSON.paragraphs.length > 0 &&
+    textConvertedToJSON.paragraphs[0].textSegments.length > 0;
+
+  const getLastTextSegment = () => {
+    const lastParagraph = textConvertedToJSON.paragraphs.slice(-1)[0];
+    return lastParagraph.textSegments.slice(-1)[0];
+  };
+
   const handleInsert = () => {
-    if (!textConvertedToJSON) return { paragraphs: [] };
+    if (!isItPossibleToUndo()) return;
 
-    const paragraphs = textConvertedToJSON.paragraphs;
-    if (paragraphs.length === 0) return;
-
-    const lastParagraph = paragraphs[paragraphs.length - 1];
-    const textSegments = lastParagraph.textSegments;
-    if (textSegments.length === 0) return;
-
-    const lastTextSegment = textSegments[textSegments.length - 1];
-    const lastText = lastTextSegment.insert;
+    let lastTextSegment = getLastTextSegment();
+    let lastinsert = lastTextSegment.insert;
     const lastActionPayload = lastAction?.payload;
 
-    if (lastText.endsWith(lastActionPayload)) {
-      lastTextSegment.insert = lastText.substring(
-        0,
-        lastText.length - lastActionPayload.length
-      );
+    if (lastinsert.endsWith(lastActionPayload)) {
+      lastTextSegment.insert = lastinsert.slice(0, -lastActionPayload.length);
 
-      textConvertedToJSON.paragraphs[paragraphs.length - 1].textSegments[
-        textSegments.length - 1
-      ] = lastTextSegment;
       setTextConvertedToJSON(() => ({
         paragraphs: textConvertedToJSON.paragraphs,
       }));
+      if (undoStack.current.peek()?.type === "spaceBar") {
+        lastAction = undoStack.current.pop();
+        handleSpaceBar();
+      }
     } else {
-      console.log("toBeRemovedText is not equal to lastAction?.payload");
+      console.log("toBeRemovedText is not equal to lastAction?.payload insert");
     }
   };
 
   const handleSpaceBar = () => {
-    if (textConvertedToJSON && textConvertedToJSON.paragraphs?.length > 0) {
-      const lastParagraph = textConvertedToJSON.paragraphs.slice(-1)[0];
-      const textSegments = lastParagraph.textSegments;
-      const lastTextSegment = textSegments.slice(-1)[0];
-      const lastActionPayload = lastAction?.payload;
+    const lastTextSegment = getLastTextSegment();
+    const lastActionPayload = lastAction?.payload;
 
-      if (lastTextSegment.insert.endsWith(" ")) {
-        lastTextSegment.insert = lastTextSegment.insert.slice(
-          0,
-          -lastActionPayload.length
-        );
-      } else {
-        console.log("toBeRemovedText is not equal to lastAction?.payload");
-      }
+    if (lastTextSegment.insert.endsWith(" ")) {
+      lastTextSegment.insert = lastTextSegment.insert.slice(
+        0,
+        -lastActionPayload.length
+      );
+    } else {
+      console.log(
+        "toBeRemovedText is not equal to lastAction?.payload spacebar"
+      );
+    }
 
-      lastParagraph.textSegments[textSegments.length - 1] = lastTextSegment;
+    setTextConvertedToJSON(() => ({
+      paragraphs: textConvertedToJSON.paragraphs,
+    }));
+  };
 
+  const handleEnter = () => {
+    if (!isItPossibleToUndo()) return;
+
+    const lastTextSegment = getLastTextSegment();
+
+    if (lastTextSegment.insert === "") {
+      textConvertedToJSON.paragraphs.pop();
       setTextConvertedToJSON(() => ({
         paragraphs: textConvertedToJSON.paragraphs,
       }));
     }
   };
 
-  const handleEnter = () => {
-    if (textConvertedToJSON) {
-      const paragraphs = textConvertedToJSON.paragraphs;
-      if (paragraphs.length === 0) return;
-
-      const lastParagraph = paragraphs[paragraphs.length - 1];
-      const textSegments = lastParagraph.textSegments;
-      if (textSegments.length === 0) return;
-
-      const lastTextSegment = textSegments[textSegments.length - 1];
-      const lastText = lastTextSegment.insert;
-
-      if (lastText === "") {
-        paragraphs.pop();
-        setTextConvertedToJSON(() => ({
-          paragraphs: paragraphs,
-        }));
-      }
-    }
-  };
-
   const deleteEmptyTextSegment = () => {
-    if (textConvertedToJSON) {
-      const paragraphs = textConvertedToJSON.paragraphs;
-      if (paragraphs.length === 0) return;
+    if (!isItPossibleToUndo()) return;
+    const paragraphs = textConvertedToJSON.paragraphs;
 
-      const lastParagraph = paragraphs[paragraphs.length - 1];
-      const textSegments = lastParagraph.textSegments;
-      if (textSegments.length === 0) return;
+    const lastParagraph = paragraphs[paragraphs.length - 1];
+    const textSegments = lastParagraph.textSegments;
 
-      const lastTextSegment = textSegments[textSegments.length - 1];
-      const lastText = lastTextSegment.insert;
+    const lastTextSegment = textSegments[textSegments.length - 1];
+    const lastText = lastTextSegment.insert;
 
-      if (lastText === "") {
-        paragraphs[paragraphs.length - 1].textSegments.pop();
-        setTextConvertedToJSON(() => ({
-          paragraphs: paragraphs,
-        }));
-      }
+    if (lastText === "") {
+      paragraphs[paragraphs.length - 1].textSegments.pop();
+      setTextConvertedToJSON(() => ({
+        paragraphs: paragraphs,
+      }));
     }
   };
 
@@ -146,11 +137,13 @@ const undo = ({
     deleteEmptyTextSegment();
   };
 
-  let lastAction = undoStack.current.pop();
+  const handleError = (message: string) => {
+    console.log(message);
+  };
+
   switch (lastAction?.type) {
     case "insert":
-      // TO DO: when deleting a word it should also delete the space before it
-      handleInsert(); //this function deletes a word  that was inserted
+      handleInsert();
       break;
     case "spaceBar":
       handleSpaceBar();
