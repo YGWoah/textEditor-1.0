@@ -2,7 +2,6 @@ import CircularBuffer from "./CircularBuffer";
 import { JustifyValue, TextConvertedToJSON, TextStyle } from "../types/types";
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import insertNormalLetter from "./HandlingKeys/insertNormalLetter";
-import { text } from "stream/consumers";
 
 /**
  * Undoes the last action performed on the text editor.
@@ -137,9 +136,9 @@ const undo = ({
     deleteEmptyTextSegment();
   };
 
-  const handleError = (message: string) => {
-    console.log(message);
-  };
+  // const handleError = (message: string) => {
+  //   console.log(message);
+  // };
 
   switch (lastAction?.type) {
     case "insert":

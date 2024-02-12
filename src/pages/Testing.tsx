@@ -1,4 +1,4 @@
-import { useState, useRef, ButtonHTMLAttributes } from "react";
+import { useRef } from "react";
 
 const Button: React.FC = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);

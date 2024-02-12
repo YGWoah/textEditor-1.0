@@ -1,9 +1,8 @@
-import { useEffect, useState, useRef, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { TextConvertedToJSON } from "../../types/types";
 import TitleInput from "../Inputs/TitleInput";
 import TextInput from "./TextInput";
 import textFormattingStateContext from "../../context/TextFormattingStateContext";
-import useClickOutside from "../../hooks/useClickInside";
 import CircularBuffer from "../../utils/CircularBuffer";
 
 const CustomTextFeild = ({
