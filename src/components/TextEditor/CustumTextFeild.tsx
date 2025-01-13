@@ -1,35 +1,33 @@
-import { useEffect, useState, useRef, useContext } from "react";
-import { CursorPosition, TextConvertedToJSON } from "../../types/types";
+import { useEffect, useState, useContext } from "react";
+import { TextConvertedToJSON } from "../../types/types";
 import TitleInput from "../Inputs/TitleInput";
-import TextEditor from "./TextEditor";
+import TextInput from "./TextInput";
 import textFormattingStateContext from "../../context/TextFormattingStateContext";
+import CircularBuffer from "../../utils/CircularBuffer";
 
-const CustomTextFeild = ({}: {}) => {
-  const [textConvertedToJSON, setTextConvertedToJSON] =
-    useState<TextConvertedToJSON>(null);
+const CustomTextFeild = ({
+  undoStack,
+  textConvertedToJSON,
+  setTextConvertedToJSON,
+}: {
+  undoStack: React.MutableRefObject<CircularBuffer>;
+  textConvertedToJSON: TextConvertedToJSON;
+  setTextConvertedToJSON: React.Dispatch<
+    React.SetStateAction<TextConvertedToJSON>
+  >;
+}) => {
+  // const [textConvertedToJSON, setTextConvertedToJSON] =
+  //   useState<TextConvertedToJSON>(null);
   const [title, setTitle] = useState<string>("");
-  const [cursorPositin, setCursorPosition] = useState<CursorPosition>(null);
-  const targetDivRef = useRef<HTMLDivElement>(null);
-  const [isClickedInside, setIsClickedInside] = useState(false);
+  // const targetDivRef = useRef<HTMLDivElement>(null);
 
   const justify = useContext(textFormattingStateContext).justify;
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      targetDivRef.current &&
-      !targetDivRef.current.contains(event.target as Node)
-    ) {
-      setIsClickedInside(false);
-    }
-  };
+  // //this is a custom hook that returns true if the user clicks outside the target div
+  // let isClickedInside = useClickOutside(targetDivRef);
+  const cursorPositin = useContext(textFormattingStateContext).cursorPosition;
 
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
-
+  //TO DO : see if i can remove this useEffect
   useEffect(() => {
     setTextConvertedToJSON((prevTextConvertedToJSON) => {
       if (prevTextConvertedToJSON) {
@@ -45,19 +43,18 @@ const CustomTextFeild = ({}: {}) => {
       return null;
     });
   }, [justify]);
-  console.log(cursorPositin);
 
   return (
     <div className="flex items-center flex-col w-full">
       <TitleInput title={title} setTitle={setTitle} />
-      <TextEditor
-        setIsClickedInside={setIsClickedInside}
+      <TextInput
         textConvertedToJSON={textConvertedToJSON}
         setTextConvertedToJSON={setTextConvertedToJSON}
-        setCursorPosition={setCursorPosition}
-        targetDivRef={targetDivRef}
-        isClickedInside={isClickedInside}
+        // targetDivRef={targetDivRef}
+        // isClickedInside={isClickedInside}
+        undoStack={undoStack}
       />
+      <p>{cursorPositin?.paragraphIndex}</p>
     </div>
   );
 };

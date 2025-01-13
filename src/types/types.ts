@@ -27,3 +27,19 @@ export type CursorPosition = {
   textSegmentIndex: number;
   position: number;
 } | null;
+
+export type ActionType =
+  | "insert"
+  | "delete"
+  | "changeStyle"
+  | "changeJustify"
+  | "undo"
+  | "redo"
+  | "clear"
+  | "spaceBar"
+  | "enter";
+
+export type Action = {
+  type: ActionType;
+  payload: any;
+};

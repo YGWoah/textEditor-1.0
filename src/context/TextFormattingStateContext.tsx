@@ -1,11 +1,13 @@
 import React, { createContext } from "react";
-import { TextStyle, JustifyValue } from "../types/types";
+import { TextStyle, JustifyValue, CursorPosition } from "../types/types";
 
 type TextFormattingStateContext = {
   textStyle: TextStyle;
   setTestStyle: React.Dispatch<React.SetStateAction<TextStyle>>;
   justify: JustifyValue;
   setJustify: React.Dispatch<React.SetStateAction<JustifyValue>>;
+  cursorPosition: CursorPosition;
+  setCursorPosition: React.Dispatch<React.SetStateAction<CursorPosition>>;
 };
 
 const textFormattingStateContext = createContext<TextFormattingStateContext>({
@@ -19,6 +21,8 @@ const textFormattingStateContext = createContext<TextFormattingStateContext>({
   setTestStyle: () => {},
   justify: "left",
   setJustify: () => {},
+  cursorPosition: null,
+  setCursorPosition: () => {},
 } as TextFormattingStateContext);
 
 export default textFormattingStateContext;
